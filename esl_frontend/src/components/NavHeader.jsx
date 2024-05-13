@@ -31,9 +31,8 @@ export default function NavHeader() {
           <NavLink>Rooms</NavLink>
           {isDropdownOpen && (
             <div className="dropdown-content">
-              <NavLink to="/rooms">Book room</NavLink>
+              <NavLink to="/Booking">Book room</NavLink>
               <NavLink to="/meetings">See booked</NavLink>
-              {/* Add more room links as needed */}
             </div>
           )}
         </li>

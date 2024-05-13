@@ -6,7 +6,7 @@ import  Warehouse  from "./pages/Warehouse"
 import  Booking  from "./pages/Booking"
 import  Meetings  from "./pages/Meetings"
 import  Rooms  from "./pages/Rooms"
-
+import  Fail  from "./pages/Fail"
 
 export default function App() {
   return (
@@ -18,7 +18,7 @@ export default function App() {
         <Route path="/Booking" element={<Booking />} />
         <Route path="/meetings" element={<Meetings />} />
         <Route path="/room/:id" element={<Rooms />} />
-        <Route path="*" element={<h2>Not Found</h2>} />
+        <Route path="*" element={<Fail />} />
       </Routes>
     </Router>
   );

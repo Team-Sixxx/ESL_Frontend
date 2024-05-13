@@ -1,17 +1,14 @@
-import { useParams, NavLink } from "react-router-dom";
 
-function Rooms() {
-    const { id } = useParams();
-
+function Fail() {
     return (
       <div className="App">
         <header className="App-header">
           <p>
-            Rooms {id}
+            Not Found
           </p>
         </header>
       </div>
     );
   }
   
-  export default Rooms;
+export default Fail;

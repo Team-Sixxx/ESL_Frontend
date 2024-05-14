@@ -33,6 +33,7 @@ export default function NavHeader() {
             <div className="dropdown-content">
               <NavLink to="/Booking">Book room</NavLink>
               <NavLink to="/meetings">See booked</NavLink>
+              <NavLink to="/ManageRooms">Manage rooms</NavLink>
             </div>
           )}
         </li>

@@ -1,0 +1,47 @@
+.home-container {
+  width: 100%;
+  margin: 0; /* Reset margin */
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  padding: 0%;
+}
+
+body {
+  overflow-y: scroll; /* Always show vertical scrollbar */
+}
+
+/* Hide scrollbar but keep ability to scroll */
+body::-webkit-scrollbar {
+  width: 0; /* Remove scrollbar width */
+}
+
+/* Optional: Shift content slightly to the left to hide scrollbar */
+body {
+  margin-right: -15px; /* Adjust as needed */
+}
+
+.box {
+  position: absolute;
+  width: 100%;
+  left: 0%;
+  transition: transform 0.3s ease-in-out;
+}
+
+.box video {
+  top: 0;
+  left: 0;
+}
+
+.box video:hover {
+  filter: brightness(0.7);
+}
+.react-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+body {
+  background-color: transparent !important;
+}

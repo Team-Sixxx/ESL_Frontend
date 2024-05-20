@@ -19,6 +19,7 @@
     "axios": "^1.6.8",
     "axios-hooks": "^5.0.2",
     "bootstrap": "^5.3.3",
+    "dhtmlx-gantt": "^8.0.7",
     "moment": "^2.30.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",

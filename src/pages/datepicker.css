@@ -1,0 +1,16 @@
+/* Override the default styles to always show the calendar */
+.react-datepicker-popper {
+    z-index: 1; /* Ensure the calendar is above other elements */
+  }
+  
+  .react-datepicker {
+    display: block !important; /* Ensure the calendar is always displayed */
+  }
+  
+  .react-datepicker__portal {
+    position: relative !important; /* Ensure the calendar is positioned correctly */
+  }
+  
+  .react-datepicker__input-container {
+    display: none; /* Hide the input field */
+  }

@@ -8,7 +8,6 @@ import Home from "./Home";
 
 import "./scss/styles.scss";
 
-import "./App.css";
 import Warehouse from "./pages/Warehouse";
 import Booking from "./pages/Booking";
 import Meetings from "./pages/Meetings";

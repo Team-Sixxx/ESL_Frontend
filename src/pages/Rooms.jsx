@@ -15,25 +15,34 @@ function Rooms() {
   const [booked, setBooked] = useState([]);
   const navigate = useNavigate();
 
-  const [{ data: bookings, loading: bookingsLoading, error: bookingsError }, execute] = useAxios({
-    url: `https://localhost:7154/api/bookingroom/${id}`,
-    headers: {
-      "Access-Control-Allow-Credentials": true,
-    },
-  }, { manual: true });
-  
+  //const [{ data: bookings, loading: bookingsLoading, error: bookingsError }, execute] = useAxios({
+  //  url: `https://localhost:7154/api/bookingroom/${id}`,
+  //  headers: {
+  //    "Access-Control-Allow-Credentials": true,
+  //  },
+  //}, { manual: true });
+  //  async function fetchData() {
+  //    await execute();
+  //  }
+  //  fetchData();
+  //}, [execute]);
+  //
+  //useEffect(() => {
+  //  if (bookings) {
+  //    setBooked(bookings);
+  //  }
+  //}, [bookings]);
+
+
+  //Test data
+  const bookings = [
+    { id: 1, text: 'Meeting 1', start_date: '2024-05-20 09:00', duration: 60 },
+    { id: 2, text: 'Meeting 2', start_date: '2024-05-21 10:00', duration: 90 },
+  ];
   useEffect(() => {
-    async function fetchData() {
-      await execute();
-    }
-    fetchData();
-  }, [execute]);
-  
-  useEffect(() => {
-    if (bookings) {
-      setBooked(bookings);
-    }
-  }, [bookings]);
+    setBooked(bookings);
+  }, []); 
+
 
   useEffect(() => {
     if (booked.length > 0) {
@@ -91,8 +100,8 @@ function Rooms() {
 
     console.log("Booking Date:", bookingDate);
     console.log("Duration:", meetingDuration);
-    
-    // const response = useAxios https://example.com/api/bookRoom?date=${date}&time=${time}&duration=${duration}&id=${id};
+    // example:
+    // const response = useAxios https://localhost:7154/api/bookRoom?date=${date}&time=${time}&duration=${duration}&id=${id};
   };
 
   return (

@@ -1,6 +1,11 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  background: linear-gradient(to bottom left, blue, rgb(61, 94, 241)) fixed;
+  background: linear-gradient(
+      to bottom left,
+      rgb(242, 242, 245),
+      rgb(243, 245, 250)
+    )
+    fixed;
   background-size: cover;
   background-repeat: no-repeat;
 }

@@ -4,7 +4,17 @@ import { useLocation } from "react-router-dom";
 //import { useAuth } from "./_Authprovider";
 //import { User } from "../services/authService";
 import { useState } from "react";
-import "./navheader.css";
+
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Button,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +24,8 @@ export default function NavHeader() {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
   const [err, setErr] = useState(null);
+
+  const [anchorEl, setAnchorEl] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleMouseEnter = () => {
@@ -22,6 +34,14 @@ export default function NavHeader() {
 
   const handleMouseLeave = () => {
     setIsDropdownOpen(false);
+  };
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   function login() {
@@ -40,56 +60,73 @@ export default function NavHeader() {
   }
 
   return (
-    <nav className="nav-header">
-      <ul>
-        <li>
-          <h1 style={{ fontStyle: "italic", color: "black !important" }}>
-            UXV Technologies Booking / ESL Test
-          </h1>
-        </li>
-      </ul>
-      <ul>
-        <li>
-          <NavLink to="/">Home</NavLink>
-        </li>
-        <li></li>
-        <li
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          className="dropdown"
-        >
-          <NavLink>Rooms</NavLink>
-          {isDropdownOpen && (
-            <div className="dropdown-content">
-              <NavLink to="/Booking">Book room</NavLink>
-              <NavLink to="/meetings">See booked</NavLink>
-            </div>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Toolbar variant="dense">
+          <Typography
+            variant="h6"
+            color="inherit"
+            component="div"
+            sx={{ flexGrow: 1 }}
+          >
+            <h1 style={{ fontStyle: "italic", color: "white" }}>
+              UXV Technologies Booking
+            </h1>
+          </Typography>
+          <Button color="inherit" component={NavLink} to="/">
+            Home
+          </Button>
+          <Button
+            color="inherit"
+            aria-controls="rooms-menu"
+            aria-haspopup="true"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onClick={handleMenu}
+          >
+            Rooms
+          </Button>
+          <Menu
+            id="rooms-menu"
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl) && isDropdownOpen}
+            onClose={handleClose}
+            MenuListProps={{
+              onMouseEnter: handleMouseEnter,
+              onMouseLeave: handleMouseLeave,
+            }}
+          >
+            <MenuItem component={NavLink} to="/Booking" onClick={handleClose}>
+              Book room
+            </MenuItem>
+            <MenuItem component={NavLink} to="/meetings" onClick={handleClose}>
+              See booked
+            </MenuItem>
+          </Menu>
+          <Button color="inherit" component={NavLink} to="/warehouse">
+            Warehouse
+          </Button>
+          {!auth.isLoggedIn() ? (
+            <Button color="inherit" onClick={login}>
+              Login
+            </Button>
+          ) : (
+            <>
+              {auth.username && (
+                <Typography variant="body1" color="inherit">
+                  Logged in as {auth.username}
+                </Typography>
+              )}
+              <Button color="inherit" component={NavLink} to="/logout">
+                Logout
+              </Button>
+              <Button color="inherit" component={NavLink} to="/admin">
+                Admin panel
+              </Button>
+            </>
           )}
-        </li>
-        <li>
-          <NavLink to="/warehouse">Warehouse</NavLink>
-        </li>
-      </ul>
-      <ul style={{ paddingLeft: "10px" }}>
-        {!auth.isLoggedIn() ? (
-          <>
-            <li>
-              <NavLink onClick={login}>Login</NavLink>
-            </li>
-          </>
-        ) : (
-          <>
-            {auth.username && <li>Logged in as {auth.username}</li>}
-
-            <li>
-              <NavLink to="/logout">Logout</NavLink>
-            </li>
-            <li>
-              <NavLink to="/admin">Admin panel</NavLink>
-            </li>
-          </>
-        )}
-      </ul>
-    </nav>
+        </Toolbar>
+      </AppBar>
+    </Box>
   );
 }

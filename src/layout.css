@@ -7,13 +7,9 @@
   left: 0;
   z-index: 555;
   right: 0;
-  background: linear-gradient(
-    to bottom right,
-    #555,
-    #333
-  ); /* Example gradient from red to yellow */
+
   color: #fff;
-  padding: 1rem 0rem;
+
   box-shadow: 0 10px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -55,12 +51,12 @@
   margin-top: -1rem;
 }
 
-  .nav-header ul li a.active {
-    text-decoration: underline;
-  }
-  
-  .page-content {
-    margin-top: 5rem;
+.nav-header ul li a.active {
+  text-decoration: underline;
+}
+
+.page-content {
+  margin-top: 5rem;
 }
 
 .app-layout {

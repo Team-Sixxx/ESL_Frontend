@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useAxios from "axios-hooks";
 import { API_URL } from "./settings";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "./context/AuthProvider";
 import {
@@ -19,7 +19,12 @@ export default function Home() {
   const [bookingsObject, setBookings] = useState([]);
   const SCREENINGS_URL = `${API_URL}/api/meetingrooms`;
   const auth = useAuth();
+  const navigate = useNavigate();
   const [status, setStatus] = useState(true);
+
+  function handleClick() {
+    navigate("/room/1");
+  }
 
   const [{ data: bookings, loading: postLoading, error: postError }, execute] =
     useAxios({
@@ -75,13 +80,13 @@ export default function Home() {
                     Location: {room.location}
                   </Typography>{" "}
                   <Button
-                    href="/Booking"
                     variant="contained"
+                    type="button"
+                    onClick={handleClick}
                     disabled={!auth.isLoggedIn()}
                   >
                     {" "}
                     Book room
-                    <Link to="/room/1"></Link>
                   </Button>
                 </CardContent>
               </Card>

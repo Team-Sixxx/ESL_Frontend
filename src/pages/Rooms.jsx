@@ -56,10 +56,14 @@ const BootstrapDialogTitle = (props) => {
 
 function Rooms() {
   const { id } = useParams();
-
+  const [update, setUpdate] = useState(false);
   const [booked, setBooked] = useState([]);
   const [open, setOpen] = useState(false);
-  const [setSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
   const navigate = useNavigate();
 
   const [
@@ -68,7 +72,7 @@ function Rooms() {
   ] = useAxios(
     {
       url: `https://localhost:7154/api/bookingroom/${id}`,
-      withCredentials: true, // Make sure credentials are included if needed
+      withCredentials: true, // credentials
     },
     { manual: true }
   );
@@ -77,8 +81,7 @@ function Rooms() {
     async function fetchData() {
       const response = await execute();
       if (response.data) {
-        console.log(response.data, "response.data");
-
+        //console.log(response.data, "response.data");
         if (response.data.length > 1) {
           setBooked(response.data);
         } else {
@@ -87,7 +90,7 @@ function Rooms() {
       }
     }
     fetchData();
-  }, [execute, id]);
+  }, [execute, id, update]);
 
   useEffect(() => {
     if (booked.length > 0) {
@@ -98,13 +101,13 @@ function Rooms() {
       gantt.config.duration_unit = "minute";
       gantt.config.show_markers = true;
 
-      // Set scale unit to hours
+      // unit to hours
       gantt.config.scale_unit = "hour";
       gantt.config.date_scale = "%H:%i";
-      gantt.config.step = 1; // 1-hour steps
+      gantt.config.step = 1;
       gantt.config.subscales = [{ unit: "minute", step: 30, date: "%H:%i" }];
 
-      // Update column configuration
+      // column configuration
       gantt.config.columns = [
         { name: "text", label: "Room", width: 156, tree: true, resize: true },
         {
@@ -134,13 +137,15 @@ function Rooms() {
 
       const ganttData = booked
         .map((booking) => {
-          const startDate = new Date(booking.startTime);
-          const endDate = new Date(booking.endTime);
+          let endDate = new Date();
+          let startDate = new Date();
 
-          // Validate dates
-          if (isNaN(startDate) || isNaN(endDate)) {
-            console.error(`Invalid date for booking ID ${booking.id}`);
-            return null;
+          if (booked.length > 1) {
+            startDate = new Date(booking.startTime);
+            endDate = new Date(booking.endTime);
+          } else {
+            startDate = Date.parse(booking.startTime);
+            endDate = Date.parse(booking.endTime);
           }
 
           const differenceInMilliseconds = endDate - startDate;
@@ -154,33 +159,18 @@ function Rooms() {
             duration: differenceInMinutes,
           };
         })
-        .filter((booking) => booking !== null); // Filter out any invalid bookings
-
-      console.log(ganttData, "ganttData");
+        .filter((booking) => booking !== null); // Filter out invalid bookings
 
       var dateToStr = gantt.date.date_to_str(gantt.config.task_date);
       var markerId = gantt.addMarker({
-        start_date: new Date(), // a Date object that sets the marker's date
-        css: "today", // a CSS class applied to the marker
-        text: "Now", // the marker title
-        title: dateToStr(new Date()), // the marker's tooltip
+        start_date: new Date(), // marker's date
+        css: "today", // CSS class to marker
+        text: "Now", // marker title
+        title: dateToStr(new Date()), // marker's tooltip
       });
-
-      console.log(markerId, "markerId");
-
-      // if (gantt.getMarker(markerId)) {
-      //   gantt.parse({ data: ganttData });
-      //   gantt.getMarker(markerId);
-      // }
 
       gantt.parse({ data: ganttData });
       gantt.getMarker(markerId);
-
-      //gantt.attachEvent("onTaskClick", (id, e) => {
-      //  e.preventDefault();
-      //  const clickedBookingId = id.toString();
-      //  navigate(`/booking/${clickedBookingId}`);
-      //});
     }
   }, [booked, navigate]);
 
@@ -190,30 +180,44 @@ function Rooms() {
 
   const handleClose = async () => {
     setOpen(false);
-    await execute();
+    setUpdate(true);
   };
 
   const handleBookingSuccess = () => {
-    setOpenSnackbar(true);
+    setSnackbar({
+      open: true,
+      message: "You successfully added a new booking!",
+      severity: "success",
+    });
+    setUpdate((prev) => !prev); // Trigger update to refresh bookings
   };
+
+  const handleBookingError = (error) => {
+    setSnackbar({
+      open: true,
+      message: `Booking failed: ${error}`,
+      severity: "error",
+    });
+  };
+
   const handleSnackClose = () => {
-    setOpenSnackbar(false);
+    setSnackbar({ open: false, message: "", severity: "" });
   };
 
   return (
     <section className="page container mt-5">
       <Snackbar
-        open={setSnackbar}
+        open={snackbar.open}
         onClose={handleSnackClose}
         autoHideDuration={5000}
       >
         <Alert
-          onClose={handleClose}
-          severity="success"
+          onClose={handleSnackClose}
+          severity={snackbar.severity}
           variant="filled"
           sx={{ width: "100%" }}
         >
-          You sucessfully added a new booking!
+          {snackbar.message}
         </Alert>
       </Snackbar>
 
@@ -238,6 +242,7 @@ function Rooms() {
           <RoomBookingForm
             onClose={handleClose}
             onSuccess={handleBookingSuccess}
+            onError={handleBookingError}
           />
         </DialogContent>
       </BootstrapDialog>

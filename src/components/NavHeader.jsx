@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { useAuth } from "./context/AuthProvider";
+import { useAuth } from "../context/AuthProvider";
 import { useLocation } from "react-router-dom";
 //import { useAuth } from "./_Authprovider";
 //import { User } from "../services/authService";
@@ -45,10 +45,6 @@ export default function NavHeader() {
   };
 
   function login() {
-    //setErr(null);
-    //console.log(err);
-    //alert("Login: " + JSON.stringify(user));
-    //return;
     auth
       .signIn()
       .then(() => {
@@ -76,16 +72,7 @@ export default function NavHeader() {
           <Button color="inherit" component={NavLink} to="/">
             Home
           </Button>
-          <Button
-            color="inherit"
-            aria-controls="rooms-menu"
-            aria-haspopup="true"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onClick={handleMenu}
-          >
-            Rooms
-          </Button>
+
           <Menu
             id="rooms-menu"
             anchorEl={anchorEl}
@@ -103,9 +90,7 @@ export default function NavHeader() {
               See booked
             </MenuItem>
           </Menu>
-          <Button color="inherit" component={NavLink} to="/warehouse">
-            Warehouse
-          </Button>
+
           {!auth.isLoggedIn() ? (
             <Button color="inherit" onClick={login}>
               Login
@@ -121,7 +106,7 @@ export default function NavHeader() {
                 Logout
               </Button>
               <Button color="inherit" component={NavLink} to="/admin">
-                Admin panel
+                Admin panel (Coming soon)
               </Button>
             </>
           )}

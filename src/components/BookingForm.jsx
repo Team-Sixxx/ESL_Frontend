@@ -5,13 +5,20 @@ import "react-datepicker/dist/react-datepicker.css";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import useAxios from "axios-hooks";
 import { useAuth } from "../context/AuthProvider.jsx";
+import moment from "moment";
+import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
-function RoomBookingForm({ onClose, onSuccess }) {
+function RoomBookingForm({ onClose, onSuccess, onError }) {
   const { id } = useParams();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { username } = useAuth();
   const [selectedTime, setSelectedTime] = useState("");
   const [meetingDuration, setMeetingDuration] = useState("");
+
+  const [value, setValue] = useState(moment());
 
   const [{ data: bookings, error: bookingsError }, executePost] = useAxios(
     {
@@ -21,8 +28,6 @@ function RoomBookingForm({ onClose, onSuccess }) {
     },
     { manual: true }
   );
-
-  console.log(username, "username");
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -39,32 +44,38 @@ function RoomBookingForm({ onClose, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const [hours, minutes] = selectedTime.split(":").map(Number);
-    const bookingDate = new Date(selectedDate);
-    bookingDate.setHours(hours, minutes);
-
     // Calculate end time based on duration
-    const endDate = new Date(bookingDate);
-    endDate.setMinutes(endDate.getMinutes() + parseInt(meetingDuration, 10));
+    const endDate = value.clone().add(parseInt(meetingDuration, 10), "minutes");
+
+    var gmtDateTime = moment.utc(value, "YYY-MM-DD HH:mm");
+    var gmtDateTime2 = moment.utc(endDate, "YYY-MM-DD HH:mm");
+
+    var local = gmtDateTime.local().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
+    var local2 = gmtDateTime2.local().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
 
     const bookingData = {
       RoomId: id,
       MeetingRoomId: id,
-      StartTime: bookingDate.toISOString(), // Ensure it's in ISO format (UTC)
-      EndTime: endDate.toISOString(), // Ensure it's in ISO format (UTC)
-      User: username, // Replace with the actual user name if needed
+      StartTime: local,
+      EndTime: local2,
+      User: username,
       isLive: false,
     };
-
     try {
-      await executePost({
+      let response = await executePost({
         data: bookingData,
       });
-      // handle success, maybe show a message or update state
+      console.log(response, "response");
       onClose();
       onSuccess();
     } catch (error) {
-      console.error("Error posting booking data", error);
+      console.error("Error posting booking data", error.response.data.message);
+      if (error.response.data.message) {
+        onError(error.response.data.message);
+      } else {
+        onError(error);
+      }
+      onClose();
     }
   };
 
@@ -73,26 +84,21 @@ function RoomBookingForm({ onClose, onSuccess }) {
       <header>
         <form onSubmit={handleSubmit}>
           <Box sx={{ mt: 3 }}>
-            <Typography>Select Date:</Typography>
-            <DatePicker
-              selected={selectedDate}
-              onChange={handleDateChange}
-              customInput={<TextField fullWidth />}
-            />
-          </Box>
-          <Box sx={{ mt: 3 }}>
             <Typography>Enter Time:</Typography>
-            <TextField
-              type="text"
-              value={selectedTime}
-              onChange={handleTimeChange}
-              placeholder="Enter time (e.g., 09:00)"
-              fullWidth
-            />
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+              <DemoContainer components={["DateTimePicker", "DateTimePicker"]}>
+                <DateTimePicker
+                  label="Choose Date and Time"
+                  value={value}
+                  onChange={(newValue) => setValue(newValue)}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
           </Box>
           <Box sx={{ mt: 3 }}>
             <Typography>Enter Duration (in minutes):</Typography>
             <TextField
+              label="Duration in Minutes"
               type="text"
               value={meetingDuration}
               onChange={handleDurationChange}

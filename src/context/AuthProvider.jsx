@@ -36,15 +36,15 @@ export default function AuthProvider({ children }) {
         "https://localhost:7154/User/signin-google",
         {
           method: "Get",
-          credentials: "include", // Ensure cookies are included
+          credentials: "include", // !important cookies needs to be included
         }
       );
 
       if (response) {
         const data = await response.json();
         let loginUrl = data.googleAuthUrl;
-        console.log(response, "response");
-        console.log(data, "data");
+        //console.log(response, "response");
+        //console.log(data, "data");
         if (loginUrl) {
           // Open the Google login URL in a new tab
           window.open(loginUrl, "_blank");
@@ -102,7 +102,7 @@ export default function AuthProvider({ children }) {
   };
 
   function isLoggedIn() {
-    console.log(username, "username");
+    //console.log(username, "username");
     return username != null;
   }
 

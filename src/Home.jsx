@@ -44,8 +44,8 @@ export default function Home() {
   useEffect(() => {
     if (bookings) {
       if (auth.username != null) {
-        console.log(status);
-        console.log(auth.isLoggedIn());
+        //console.log(status);
+        //console.log(auth.isLoggedIn());
         setStatus(false);
       }
 

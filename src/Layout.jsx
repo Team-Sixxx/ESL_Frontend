@@ -1,5 +1,5 @@
 import React from "react";
-import NavHeader from "./NavHeader";
+import NavHeader from "./components/NavHeader";
 import "./layout.css";
 import { version } from "../package.json";
 const Layout = ({ children }) => {
